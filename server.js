@@ -34,13 +34,6 @@ function mov(id, done) {
     })
     .catch();
 }
-const testMenu = Telegraf.Extra.HTML().markup(m =>
-  m.inlineKeyboard([m.urlButton("下载", úrl)])
-);
-
-const aboutMenu = Telegraf.Extra.markdown().markup(m =>
-  m.keyboard([m.callbackButton("⬅️ Back")]).resize()
-);
 
 const bot = new Telegraf(process.env.KKDX);
 bot.start(ctx => ctx.reply("Welcome!"));
@@ -51,7 +44,15 @@ bot.hears("hi", ctx => ctx.reply("Hey there"));
 bot.on("message", ctx => {
   if (ctx.message.hasOwnProperty("entities")) {
     var úrl = ctx.message.entities[0].url;
+    var downbtn = Telegraf.Extra.HTML().markup(m =>
+      m.inlineKeyboard([m.urlButton("🗂️下载⬇️", úrl)])
+    );
+
+    const aboutMenu = Telegraf.Extra.markdown().markup(m =>
+      m.keyboard([m.callbackButton("⬅️ Back")]).resize()
+    );
   }
+
   var t = ctx.message.hasOwnProperty("caption")
     ? ctx.message.caption
     : ctx.message.text;
@@ -82,7 +83,7 @@ bot.on("message", ctx => {
   return search(encodeURIComponent(t), id => {
     if (id == []) return ctx.reply("Not found.");
     mov(id, d => {
-      ctx.reply(d, testMenu);
+      downbtn ? ctx.reply(d, downbtn) : ctx.reply(d);
     });
   });
 });
