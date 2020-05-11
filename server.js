@@ -42,6 +42,9 @@ bot.on("sticker", ctx => ctx.reply("👍"));
 bot.hears("hi", ctx => ctx.reply("Hey there"));
 
 bot.on("message", ctx => {
+  var ren = ctx.message.from.id.toString();
+  if (!(ren == "405582582" || ren == "556691025"))
+    return ctx.reply("你无权使用");
   if (ctx.message.hasOwnProperty("entities")) {
     var úrl = ctx.message.entities[0].url;
     var downbtn = Telegraf.Extra.HTML().markup(m =>
@@ -83,7 +86,11 @@ bot.on("message", ctx => {
   return search(encodeURIComponent(t), id => {
     if (id == []) return ctx.reply("Not found.");
     mov(id, d => {
-      downbtn ? ctx.reply(d, downbtn) : ctx.reply(d);
+      if (downbtn) {
+        // ctx.reply(d, downbtn); bot.telegram.sendMessage(-1423423348, d, downbtn);
+      } else {
+        ctx.reply(d);
+      }
     });
   });
 });
