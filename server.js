@@ -19,7 +19,7 @@ function mov(id, done) {
       console.log(d);
       var rating = d.rating.average;
       var res = tag(d.title, "b");
-      res += "\n" + d.summary;
+      res += "\n" + d.summary.replace("©豆瓣", "");
       res +=
         "\n" +
         tag("上映时间 ", "b") +
@@ -43,12 +43,18 @@ bot.hears("hi", ctx => ctx.reply("Hey there"));
 
 bot.on("message", ctx => {
   var ren = ctx.message.from.id.toString();
-  if (!(ren == "405582582" || ren == "556691025"))
+  if (
+    ren.indexOf(["405582582 556691025", "814314400 和 1010364460"].join("&")) ==
+    -1
+  )
     return ctx.reply("你无权使用");
   if (ctx.message.hasOwnProperty("entities")) {
     var úrl = ctx.message.entities[0].url;
     var downbtn = Telegraf.Extra.HTML().markup(m =>
-      m.inlineKeyboard([m.urlButton("🗂️下载⬇️", úrl)])
+      m.inlineKeyboard([
+        m.urlButton("🗂️下载⬇️", úrl),
+        m.urlButton("✨进群➕", "t.me/PanoanDriveBasic")
+      ])
     );
 
     const aboutMenu = Telegraf.Extra.markdown().markup(m =>
@@ -87,7 +93,8 @@ bot.on("message", ctx => {
     if (id == []) return ctx.reply("Not found.");
     mov(id, d => {
       if (downbtn) {
-        // ctx.reply(d, downbtn); bot.telegram.sendMessage(-1423423348, d, downbtn);
+        ctx.reply(d, downbtn);
+        bot.telegram.sendMessage("@Panoan4K", d, downbtn);
       } else {
         ctx.reply(d);
       }
