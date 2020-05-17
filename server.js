@@ -107,7 +107,13 @@ bot.on("message", ctx => {
   var ren = ctx.message.from.id.toString();
   console.log(ctx.message);
   if (
-    [" 405582582 556691025", "814314400 和 1010364460"]
+    [
+      " 405582582 ",
+      " 556691025 ",
+      " 814314400 ",
+      " 1010364460 ",
+      " 588226975 ",
+    ]
       .join(" ")
       .indexOf(" " + ren + " ") == -1
   )
@@ -191,7 +197,7 @@ bot.on("message", ctx => {
           m
             .inlineKeyboard([
               [
-                m.urlButton("🗂️ 下载 ⬇️", úrl),
+                m.urlButton("🗂️ 查看 ⬇️", úrl),
                 m.urlButton(
                   "🌱 影评 💬",
                   "https://movie.douban.com/subject/" + id + "/"
