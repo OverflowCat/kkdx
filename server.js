@@ -47,7 +47,11 @@ function mov(id, done) {
         }
       }
       var tags = d.tags.map(_tag => {
-        _tag = _tag.split("·").join("");
+        _tag = _tag
+          .split("·")
+          .join("")
+          .split("&")
+          .join("and");
         return /[0-9]{4}/.test(_tag) ? _tag + "年" : _tag;
       });
       if (d.original_title != "") res += "\n" + tag(d.original_title, "i");
@@ -103,8 +107,9 @@ bot.on("message", ctx => {
   var ren = ctx.message.from.id.toString();
   console.log(ctx.message);
   if (
-    ["405582582 556691025", "814314400 和 1010364460"].join("&").indexOf(ren) ==
-    -1
+    [" 405582582 556691025", "814314400 和 1010364460"]
+      .join(" ")
+      .indexOf(" " + ren + " ") == -1
   )
     return ctx.reply("[你无权使用]");
   //return 1;
@@ -120,22 +125,13 @@ bot.on("message", ctx => {
     var úrl = ctx.message.hasOwnProperty("entities")
       ? ctx.message.entities[0].url
       : ctx.message.caption_entities[0].url;
-    var downbtn = Telegraf.Extra.HTML().markup(m =>
-      m.inlineKeyboard([
-        [m.urlButton("🗂️在 Drive 中查看⬇️", úrl)],
-        [
-          m.urlButton("🈂️服务器升级⏫", "https://t.me/PanoanDriveBasic/44470/"), //"t.me/PanoanDriveBasic"),
-          m.urlButton("萌猫大佬的视频站", "http://moetv.live")
-        ]
-      ])
-    );
   }
   var t = ctx.message.hasOwnProperty("caption")
     ? ctx.message.caption
     : ctx.message.text;
   var originaltext = t;
-  t = t.replace(/\(.*\)/g, "");
-  t = t.replace(/\[.*\]/g, " ").trim();
+  t = t.replace(/\(.*?\)/g, "");
+  t = t.replace(/\[.*?\]/g, " ").trim(); //not greedy
   if (true) {
     t = t.split(" ").join(".");
     t = t.split("-").join(".");
@@ -145,9 +141,17 @@ bot.on("message", ctx => {
     var i, T;
     for (i = 0; i < t.length; i++) {
       if (t[i] == undefined) continue;
-      if (/((s|S)[0-9]+|Season)/.test(t[i])) break; //季
+      if (/^((s|S)[0-9]+|Season)$/.test(t[i])) break; //季
       if (/[0-9]+/.test(t[i]) && i >= 1) break; //防止影片的名称是数字
-      if (/((1080|2160)p?|blueray|x264)/gi.test(t[i])) break;
+      if (
+        /^((1080|2160)p?|blueray|x26(4|5)|10bit|HEVC|AAC|REMASTERED|HD|MA|SADPANDA|DTS|FGT)$/gi.test(
+          t[i]
+        )
+      ) {
+        if (i >= 1) {
+          break;
+        } else continue; //防止此类信息在最前**
+      } //画质
       if (!/[a-zA-Z0-9]+/.test(t[i])) continue;
       T += t[i] + " ";
     }
@@ -182,7 +186,27 @@ bot.on("message", ctx => {
       console.log(
         "==========reply msg:" + d + "=============end reply============="
       );
-      if (downbtn) {
+      if (úrl) {
+        var downbtn = Telegraf.Extra.HTML().markup(m =>
+          m
+            .inlineKeyboard([
+              [
+                m.urlButton("🗂️ 下载 ⬇️", úrl),
+                m.urlButton(
+                  "🌱 影评 💬",
+                  "https://movie.douban.com/subject/" + id + "/"
+                )
+              ],
+              [
+                m.urlButton(
+                  "🈂️ 公告 ⏫",
+                  "https://t.me/PanoanDriveBasic/44470/"
+                ), //"t.me/PanoanDriveBasic"),
+                m.urlButton("🐱 视频站 📹", "http://moetv.live")
+              ]
+            ])
+            .resize()
+        );
         ctx.reply(d + "\n" + picurl, downbtn);
         //return bot.telegram.sendMessage("@Panoan4K", d, downbtn);
         sendPhoto("@Panoan4K", picurl, d, downbtn);
