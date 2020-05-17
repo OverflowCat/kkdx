@@ -199,8 +199,8 @@ bot.on("message", ctx => {
               ],
               [
                 m.urlButton(
-                  "🈂️ 公告 ⏫",
-                  "https://t.me/PanoanDriveBasic/44470/"
+                  "🔊 使用指南 🤖",
+                  "https://t.me/PanoanDriveBasic/46029" //"https://t.me/PanoanDriveBasic/46029"
                 ), //"t.me/PanoanDriveBasic"),
                 m.urlButton("🐱 视频站 📹", "http://moetv.live")
               ]
