@@ -107,13 +107,7 @@ bot.on("message", ctx => {
   var ren = ctx.message.from.id.toString();
   console.log(ctx.message);
   if (
-    [
-      " 405582582 ",
-      " 556691025 ",
-      " 814314400 ",
-      " 1010364460 ",
-      " 588226975 ",
-    ]
+    [" 405582582 ", " 556691025 ", " 814314400 ", " 1010364460 ", " 588226975 "]
       .join(" ")
       .indexOf(" " + ren + " ") == -1
   )
@@ -141,6 +135,7 @@ bot.on("message", ctx => {
   if (true) {
     t = t.split(" ").join(".");
     t = t.split("-").join(".");
+    t = t.split("+").join(".");
     t = t.split("\n").join(".");
     t = t.split(".");
     console.log(t);
@@ -150,7 +145,7 @@ bot.on("message", ctx => {
       if (/^((s|S)[0-9]+|Season)$/.test(t[i])) break; //季
       if (/[0-9]+/.test(t[i]) && i >= 1) break; //防止影片的名称是数字
       if (
-        /^((1080|2160)p?|blueray|x26(4|5)|10bit|HEVC|AAC|REMASTERED|HD|MA|SADPANDA|DTS|FGT)$/gi.test(
+        /^((1080|2160)p?|blueray|x26(4|5)|10bit|HEVC|AAC|REMASTERED|HD|MA|SADPANDA|DTS|FGT|TV|OAD|SP)$/gi.test(
           t[i]
         )
       ) {
@@ -206,7 +201,7 @@ bot.on("message", ctx => {
               [
                 m.urlButton(
                   "🔊 使用指南 🤖",
-                  "https://t.me/PanoanDriveBasic/46029" //"https://t.me/PanoanDriveBasic/46029"
+                  "https://t.me/PanoanChannel/46" //"https://t.me/PanoanDriveBasic/46029" //"https://t.me/PanoanDriveBasic/46029"
                 ), //"t.me/PanoanDriveBasic"),
                 m.urlButton("🐱 视频站 📹", "http://moetv.live")
               ]
