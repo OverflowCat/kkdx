@@ -145,7 +145,7 @@ bot.on("message", ctx => {
       if (/^((s|S)[0-9]+|Season)$/.test(t[i])) break; //季
       if (/[0-9]+/.test(t[i]) && i >= 1) break; //防止影片的名称是数字
       if (
-        /^((1080|2160)p?|blueray|x26(4|5)|10bit|HEVC|AAC|REMASTERED|HD|MA|SADPANDA|DTS|FGT|TV|OAD|SP)$/gi.test(
+        /^((1080|2160)p?|blueray|x26(4|5)|10bit|HEVC|AAC|REMASTERED|HD|MA|SADPANDA|DTS|FGT|TV|BOX|BD|OAD|SP|EXTRAS?)$/gi.test(
           t[i]
         )
       ) {
