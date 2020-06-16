@@ -1,6 +1,7 @@
 const { Telegraf } = require("telegraf");
 const fetch = require("node-fetch");
 const pangu = require("pangu");
+const defaultLogo = "https://i.loli.net/2020/06/16/Ud2fFvntzb3psY9.jpg";
 function tag(cont, htag) {
   return "<" + htag + ">" + cont + "</" + htag + ">";
 }
@@ -17,7 +18,12 @@ function search(query, done) {
     });
 }
 function mov(id, done) {
-  fetch("https://douban.uieee.com/v2/movie/subject/" + id)
+  fetch(
+    "https://api.douban.com/v2/movie/" +
+      id +
+      "?apikey=02646d3fb69a52ff072d47bf23cef8fd"
+  )
+    //apikey=02646d3fb69a52ff072d47bf23cef8fd
     .then(response => response.json())
     .then(d => {
       console.log(d);
@@ -46,19 +52,25 @@ function mov(id, done) {
           res += " ( " + alias.join(" · ") + " ) ";
         }
       }
-      var tags = d.tags.map(_tag => {
-        _tag = _tag
+      console.log(d.tags);
+      var tags = d.tags;
+      var tågs = [];
+      tags.forEach(_tag => {
+        //新 API 中 tag 变为 Object[]   //eg: { count: 6, name: '校园性侵' }
+        var _tãg = _tag.name
           .split("·")
           .join("")
           .split("&")
           .join("and");
-        return /[0-9]{4}/.test(_tag) ? _tag + "年" : _tag;
+        tågs.push(/[0-9]{4}/.test(_tãg) ? _tãg + "年" : _tãg);
       });
+      tags = tågs;
       if (d.original_title != "") res += "\n" + tag(d.original_title, "i");
-      var languages = d.languages.map(lang => {
-        return "#" + lang;
-      });
-      res += "\n" + tag(languages.join("、"), "b");
+      if (d.hasOwnProperty("languages"))
+        var languages = d.languages.map(lang => {
+          return "#" + lang;
+          res += "\n" + tag(languages.join("、"), "b");
+        });
       res += " #" + tags.join(" #");
       res +=
         "\n" +
@@ -71,16 +83,24 @@ function mov(id, done) {
             .join("」")
         );
       res += "\n" + tag("上映时间 ", "b");
-      res +=
-        d.pubdates.length > 1
-          ? "\n" + tag(d.pubdates.join("\n"), "code")
-          : tag(d.pubdates.join("\n"), "code");
+      if (d.hasOwnProperty("pubdates"))
+        res +=
+          d.pubdates.length > 1
+            ? "\n" + tag(d.pubdates.join("\n"), "code")
+            : tag(d.pubdates.join("\n"), "code");
 
       if (rating != 0) res += "\n<b>豆瓣评分 " + rating + " </b>";
       if (d.hasOwnProperty("comments_count"))
         res += "  （ " + tag(d.comments_count + " 条评论）", "i");
       //res = pangu.spacing(res);
-      done([res, d.images.large]);
+
+      res = res
+        .split("undefined")
+        .join()
+        .split("[object Object]")
+        .join();
+
+      done([res, defaultLogo]);
     })
     .catch();
 }
@@ -200,8 +220,8 @@ bot.on("message", ctx => {
               ],
               [
                 m.urlButton(
-                  "🔊 使用指南 🤖",
-                  "https://t.me/PanoanChannel/46" //"https://t.me/PanoanDriveBasic/46029" //"https://t.me/PanoanDriveBasic/46029"
+                  "🔊 使用指南 🤖","https://t.me/PanoanDriveBasic/63121"
+                 // "https://t.me/PanoanChannel/46" //"https://t.me/PanoanDriveBasic/46029" //"https://t.me/PanoanDriveBasic/46029"
                 ), //"t.me/PanoanDriveBasic"),
                 m.urlButton("🐱 视频站 📹", "http://moetv.live")
               ]
